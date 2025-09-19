@@ -1,16 +1,11 @@
 /*
 char S2[] = {65, 108, 111, 32, 123, 103, 97, 108, 101, 114, 97, 125, 33, 0};
-
-int main(void) {
-    char *pc = S2;
-    while (*pc) {
-        if (*pc != '{' && *pc != '}') {   
-            printf("%c", *pc);
-        }
-        pc++; 
-    }
-    printf("\n");
-    return 0;
+int main (void) {
+  char *pc = S2;
+  while (*pc)
+    printf ("%c", *pc++);
+  printf("\n");
+  return 0;
 }
 */
 
@@ -38,12 +33,6 @@ L1:
   cmpb  $0, (%r12)  /* if (*pc == 0) ? */
   je  L2          /* goto L2 */
 
-
-  cmpb $123,(%r12)
-  je Lpula_print
-  cmpb $125,(%r12)
-  je Lpula_print
-
   movsbl  (%r12), %eax    /* eax = *r12 (estendendo o byte para 32 bits */
 
 /*************************************************************/
@@ -53,7 +42,7 @@ L1:
   movl  $0, %eax
   call  printf       /* chama a funcao da biblioteca */
 /*************************************************************/
-Lpula_print:
+
   addq  $1, %r12  /* r12 += 1; */
   jmp  L1         /* goto L1; */
 
