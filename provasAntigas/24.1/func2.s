@@ -11,60 +11,51 @@ s += corta(v[i], n);
 return s;
 }
 */
-
-/*
-Dicionario
-i ebx
-s r12d
-i2 ecx
-v r13
-n r14
-*/
-
 .text
 .globl buba
 buba:
-
     pushq %rbp
-    movq %rsp,%rbp
-    subq $32, %rsp
-    movq %rbx, -8(%rbp)
-    movq %r12, -16(%rbp)
-    movq %r13, -24(%rbp)
-    movq %r14, -32(%rbp)
+    movq  %rsp, %rbp
+    subq  $40, %rsp
+    movq  %rbx, -8(%rbp)
+    movq  %r12, -16(%rbp)
+    movq  %r13, -24(%rbp)
+    movq  %r14, -32(%rbp)
+    movq  %r15, -40(%rbp)
 
-    movl $0 ,%ebx
-    movl $0,%r12d
-    movl %esi, %r14d
-    movq %rdi, %r13 
+    movl  $0, %ebx         # i = 0
+    movl  $0, %r12d        # s = 0
+    movl  %esi, %r13d      # n
+    movq  %rdi, %r14       # v
+    movb  %dl,  %r15b      # c
 
-    WHILE:
-        cmpl %r14d,%ebx
-        jge FORA_WHILE
+WHILE:
+    cmpl  %r13d, %ebx      # i >= n ?
+    jge   FORA_WHILE
 
-        movslq %ebx,%rcx #i2
-        movq %r13, %rax
-        addq %rcx, %rax
+    movslq %ebx, %rcx      # rcx = (long)i
+    movq   %r14, %rax      # rax = v
+    addq   %rcx, %rax      # rax = &v[i]
 
-        movsbl (%rax),%eax
-        cmpl %edx,%eax
-        jg INC
+    cmpb  %r15b, (%rax)    # v[i] > c ?
+    jg    CONT             # se sim, pula
 
-        movsbl (%rax),%edi
-        movl %r14d, %esi
-        call corta
+    movzbl (%rax), %edi    # arg1: v[i] (zero/sign tanto faz; corta trata)
+    movl   %r13d, %esi     # arg2: n
+    call   corta
+    addl   %eax, %r12d     # s += retorno
 
-        addl %eax, %r12d
+CONT:
+    incl  %ebx             # i++
+    jmp   WHILE
 
-    INC:
-        incl %ebx
-        jmp WHILE
+FORA_WHILE:
+    movl  %r12d, %eax      # return s
 
-    FORA_WHILE:
-    movl %r12d, %eax
-    movq -8(%rbp), %rbx
-    movq -16(%rbp), %r12
-    movq -24(%rbp), %r13
-    movq -32(%rbp), %r14
-    leave 
+    movq  -8(%rbp), %rbx
+    movq  -16(%rbp), %r12
+    movq  -24(%rbp), %r13
+    movq  -32(%rbp), %r14
+    movq  -40(%rbp), %r15
+    leave
     ret
