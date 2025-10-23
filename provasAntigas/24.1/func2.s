@@ -40,7 +40,7 @@ WHILE:
     cmpb  %r15b, (%rax)    # v[i] > c ?
     jg    CONT             # se sim, pula
 
-    movzbl (%rax), %edi    # arg1: v[i] (zero/sign tanto faz; corta trata)
+    movzbl (%rax), %edi    
     movl   %r13d, %esi     # arg2: n
     call   corta
     addl   %eax, %r12d     # s += retorno
