@@ -46,7 +46,7 @@ boo:
     movq %r13, %rcx
     addq %rdx ,%rcx
     movss %xmm0, 0(%rcx)
-    movl %ecx, 4(%rcx)    
+    movl %r12d, 4(%rcx)    
 
     incl %r12d
     jmp WHILE
